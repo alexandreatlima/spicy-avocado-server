@@ -8,9 +8,9 @@ This project was inspired by the famous Rotten Tomatoes website. The idea is to 
 
 We are web developers trained by Ironhack and this is the server for our graduation project.\
 \
-[Alexandre Lima](https://www.linkedin.com/in/alexandreatlima/).\
-[Felipe Osório](https://www.linkedin.com/in/felipe-osorio/).\
-[Gabriel Furquim](https://www.linkedin.com/in/gabriel-furquim52/).
+[Alexandre Lima](https://www.linkedin.com/in/alexandreatlima/)\
+[Felipe Osório](https://www.linkedin.com/in/felipe-osorio/)\
+[Gabriel Furquim](https://www.linkedin.com/in/gabriel-furquim52/)
 
 ## Try now!
 
