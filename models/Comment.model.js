@@ -5,8 +5,10 @@ const CommentsSchema = new Schema({
   title: { type: String, require: true },
   comment: { type: String, require: true },
   userCreator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  // Esse é o ID do conteúdo (filme ou serie) na API, não no nosso DB.
+  contentId: { type: String, require: true },
 });
 
-const CommentModel = model("Comment", CommentsSchema);
+const CommentsModel = model("Comments", CommentsSchema);
 
-module.exports = CommentModel;
+module.exports = CommentsModel;
