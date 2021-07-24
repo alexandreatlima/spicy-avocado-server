@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const WatchListSchema = new Schema({
-  movie: [
+  content: [
     new Schema({
       title: { type: String, required: true, trim: true },
       year: String,
