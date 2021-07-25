@@ -8,21 +8,32 @@ const CommentModel = require("../models/Comments.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
 
+<<<<<<< HEAD:routes/comments.route.js
 
 //Adicionar comentario (C)
+=======
+// Rota de postar o comentario precisa ser post e put (para acrescentar o ID do comentário ao perfil do usuário)
+>>>>>>> 5dc4222cb0def0161ce5b684f5253c7073e17da3:routes/comments.routes.js
 router.post(
-  "/:moveId/comment",
+  "/:contentId/comment",
   isAuthenticated,
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { type } = req.body;
+      const { contentId } = req.params;
       const loggedInUser = req.currentUser;
 
       const newComment = await CommentModel.create({
+<<<<<<< HEAD:routes/comments.route.js
         userId: loggedInUser._id,
         title: req.body.title,
         comment: req.body.comment,
+=======
+        title: String,
+        comment: String,
+        userId: loggedInUser._id,
+        contentId: contentId,
+>>>>>>> 5dc4222cb0def0161ce5b684f5253c7073e17da3:routes/comments.routes.js
       });
       return res.status(201).json(newComment);
     } catch (err) {
@@ -31,6 +42,7 @@ router.post(
   }
 );
 
+<<<<<<< HEAD:routes/comments.route.js
 
 //Editar comentario (U) 
 router.put(
@@ -79,5 +91,16 @@ router.delete(
         }
     }
 )
+=======
+router.put("/:contentId/comment"),
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+    } catch (error) {
+      next(error);
+    }
+  };
+>>>>>>> 5dc4222cb0def0161ce5b684f5253c7073e17da3:routes/comments.routes.js
 
 module.exports = router;
