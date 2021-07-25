@@ -2,14 +2,18 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const WatchListSchema = new Schema({
-  content: [
+  contents: [
     new Schema({
-      title: { type: String, required: true, trim: true },
-      year: String,
-      posterUrl: String,
+      contentType: { type: String, require: true, enum: ["Movie", "Serie"] },
+      contentId: { type: Number, require: true },
+      contentStatus: {
+        type: String,
+        require: true,
+        enum: ["Watched", "To watch"],
+      },
     }),
   ],
-  userCreator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  watchListCreator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 const WatchListModel = model("WatchList", WatchListSchema);
