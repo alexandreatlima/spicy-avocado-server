@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     default: "USER",
   },
   // Isso seria uma array de ObjectIds? Serão varios comentários feitos pelo usuário >
-  userComments: { type: mongoose.Schema.Types.ObjectId, ref: "Comments" },
+  userComments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
   userWatchList: { type: mongoose.Schema.Types.ObjectId, ref: "WatchList" },
 });
 
