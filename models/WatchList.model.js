@@ -10,6 +10,7 @@ const WatchListSchema = new Schema({
         type: String,
         require: true,
         enum: ["Watched", "To watch"],
+        default: "To watch",
       },
     }),
   ],
