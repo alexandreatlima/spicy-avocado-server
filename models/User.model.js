@@ -20,7 +20,7 @@ const UserSchema = new Schema({
   // Isso seria uma array de ObjectIds? Serão varios comentários feitos pelo usuário >
   userComments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
   userWatchList: { type: mongoose.Schema.Types.ObjectId, ref: "WatchList" },
-  creationDate: { type: new Date() },
+  creationDate: { type: Date, default: new Date() },
 });
 
 const UserModel = model("User", UserSchema);

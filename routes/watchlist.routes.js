@@ -1,14 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const saltRounds = 10;
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
-const UserModel = require("../models/User.model");
 const WatchListModel = require("../models/WatchList.model");
 
-//(R) Show watchlists
+// Ver watchlist (usuário vê apenas a sua)
 
 router.get(
   "/watchlist",
@@ -17,7 +14,10 @@ router.get(
 
   async (req, res, next) => {
     try {
-      const watchlists = await WatchListModel.find();
+      const loggedInUser = req.currentUser;
+      const watchlists = await WatchListModel.findOne({
+        watchListCreator: loggedInUser,
+      });
       return res.status(200).json(watchlists);
     } catch (err) {
       next(err);
@@ -25,50 +25,82 @@ router.get(
   }
 );
 
-//(U) Adicionar/modificar watchlist especifica
+// Adicionar conteudo na watchlist
 
 router.put(
-  "/watchlist/:id",
+  "/watchlist/:contentType/:contentId",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-
-      const updatedwatchlist = await WatchListModel.findOneAndUpdate(
-        { _id: id },
-        { $set: { ...req.body } },
+      const addContentWatchList = await WatchListModel.findOneAndUpdate(
+        { watchListCreator: loggedInUser },
+        // Ta certo isso aqui?
+        { $set: { ...req.params, loggedInUser } },
         { new: true }
       );
 
-      if (updatedwatchlist) {
-        return res.status(200).json(updatedwatchlist);
+      if (addContentWatchList) {
+        return res.status(200).json(addContentWatchList);
       }
-      return res.status(404).json({ error: "watchlist não encontrada" });
+      return res
+        .status(404)
+        .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
     } catch (err) {
       next(err);
     }
   }
 );
 
-//(D) Deletar conteudo espeficico
+// Remover conteúdo da watchlist
 
 router.delete(
-  "/watchlist/:id",
+  "/watchlist/:contentType/:contentId",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-
-      const deletionResult = await WatchListModel.deleteOne({ _id: id });
+      const loggedInUser = req.currentUser;
+      const deletionResult = await WatchListModel.deleteOne({
+        watchListCreator: loggedInUser,
+      });
 
       if (deletionResult.n > 0) {
         return res.status(200).json({});
       }
-      return res.status(400).json({ error: "watchlist não encontrada" });
+      return res
+        .status(400)
+        .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Editar status do conteúdo
+
+router.put(
+  "/watchlist/:contentType/:contentId",
+  isAuthenticated,
+  attachCurrentUser,
+
+  async (req, res, next) => {
+    try {
+      const editStatusWatchList = await WatchListModel.findOneAndUpdate(
+        { watchListCreator: loggedInUser },
+        // contents é uma array, preciso acessar um obj dentro dessa array com um objectId especfico e mudar o status dele.
+        { $set: { ...req.params, loggedInUser } },
+        { new: true }
+      );
+
+      if (addContentWatchList) {
+        return res.status(200).json(addContentWatchList);
+      }
+      return res
+        .status(404)
+        .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
     } catch (err) {
       next(err);
     }

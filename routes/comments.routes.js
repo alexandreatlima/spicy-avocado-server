@@ -1,28 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const saltRounds = 10;
 
 const CommentModel = require("../models/Comments.model");
+const UserModel = require("../models/User.model");
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
-const UserModel = require("../models/User.model");
 
 //Adicionar comentario (C)
 router.post(
-  "/:contentId/comment",
+  "/:contentType/:contentId/comment",
   isAuthenticated,
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { contentId } = req.params;
+      const { type, contentId } = req.params;
       const loggedInUser = req.currentUser;
 
       const newComment = await CommentModel.create({
-        userId: loggedInUser._id,
-        title: req.body.title,
-        comment: req.body.comment,
+        ...req.body,
+        ...req.params,
+        commentCreator: loggedInUser._id,
       });
       return res.status(201).json(newComment);
     } catch (err) {
@@ -33,16 +31,16 @@ router.post(
 
 //Editar comentario (U)
 router.put(
-  "/:moveId/comment/:id",
+  "/:contentType/:contentId/:commentId",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const { commentId } = req.params;
 
       const updatedComment = await CommentModel.findOneAndUpdate(
-        { _id: id },
+        { _id: commentId },
         { $set: { ...req.body } },
         { new: true, runValidators: true }
       );
@@ -59,33 +57,31 @@ router.put(
 
 //Deletar um comentario (D)
 router.delete(
-  "/:moveId/comment/:id",
+  "/:contentType/:contentId/:commentId",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-
-      const comment = await CommentModel.findOne({ _id: id });
-      const deleteComment = await CommentModel.deleteOne({ _id: id });
+      const { commentId } = req.params;
+      const loggedInUser = req.currentUser;
+      // Precisa disso?
+      const comment = await CommentModel.findOne({ _id: commentId });
+      const deletionResult = await CommentModel.deleteOne({ _id: commentId });
 
       if (deletionResult.n > 0) {
         const updatedUser = await UserModel.findOneAndUpdate(
-          { _id: userId.userComments },
-          { $pull: { userComments: id } },
+          { _id: loggedInUser },
           { new: true }
         );
 
         if (updatedUser) {
           return res.status(200).json({});
         }
-        return res
-          .status(404)
-          .json({
-            error:
-              "Não foi possível deletar o comentario, pois o usuario não foi encontrado.",
-          });
+        return res.status(404).json({
+          error:
+            "Não foi possível deletar o comentario, pois o usuario não foi encontrado.",
+        });
       }
       return res.status(404).json({ error: "Comentario não encontrado" });
     } catch (err) {
