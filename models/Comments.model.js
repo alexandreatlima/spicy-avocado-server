@@ -2,11 +2,15 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const CommentsSchema = new Schema({
-  title: { type: String, require: true },
-  comment: { type: String, require: true, maxLength: 288 },
-  commentCreator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  contentType: { type: String, require: true, enum: ["Movie", "Serie"] },
-  contentId: { type: String, require: true },
+  title: { type: String, required: true },
+  comment: { type: String, required: true, maxLength: 288 },
+  commentCreator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  contentType: { type: String, required: true, enum: ["movie", "serie"] },
+  contentId: { type: String, required: true },
 });
 
 const CommentsModel = model("Comments", CommentsSchema);

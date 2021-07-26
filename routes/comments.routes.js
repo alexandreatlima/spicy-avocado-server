@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
 const CommentModel = require("../models/Comments.model");
+const ContentModel = require("../models/Content.model");
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
@@ -11,7 +12,7 @@ const UserModel = require("../models/User.model");
 
 //Adicionar comentario (C)
 router.post(
-  "/:type/:contentId/comment",
+  "/:contentType/:contentId/comment",
   isAuthenticated,
   attachCurrentUser,
   async (req, res, next) => {
@@ -20,9 +21,9 @@ router.post(
       const loggedInUser = req.currentUser;
 
       const newComment = await CommentModel.create({
-        userId: loggedInUser._id,
-        title: req.body.title,
-        comment: req.body.comment,
+        ...req.body,
+        ...req.params,
+        commentCreator: loggedInUser._id,
       });
       return res.status(201).json(newComment);
     } catch (err) {
@@ -80,12 +81,10 @@ router.delete(
         if (updatedUser) {
           return res.status(200).json({});
         }
-        return res
-          .status(404)
-          .json({
-            error:
-              "Não foi possível deletar o comentario, pois o usuario não foi encontrado.",
-          });
+        return res.status(404).json({
+          error:
+            "Não foi possível deletar o comentario, pois o usuario não foi encontrado.",
+        });
       }
       return res.status(404).json({ error: "Comentario não encontrado" });
     } catch (err) {
@@ -93,5 +92,15 @@ router.delete(
     }
   }
 );
+
+router.post("/content", async (req, res) => {
+  const newContent = await ContentModel.create({
+    id: 0,
+    original_name: "Teste",
+    popularity: 0,
+    type: "movie",
+  });
+  return res.status(201).json(newContent);
+});
 
 module.exports = router;
