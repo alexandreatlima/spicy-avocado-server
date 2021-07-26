@@ -11,12 +11,12 @@ const UserModel = require("../models/User.model");
 
 //Adicionar comentario (C)
 router.post(
-  "/:contentId/comment",
+  "/:type/:contentId/comment",
   isAuthenticated,
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { contentId } = req.params;
+      const { type, contentId } = req.params;
       const loggedInUser = req.currentUser;
 
       const newComment = await CommentModel.create({
