@@ -55,24 +55,23 @@ router.get(
   }
 );
 
-// Trocar status
+// Trocar status - Watched
 
 router.put(
-  "/watchlist/update-status/:contentType/:contentId",
+  "/watchlist/:contentType/:contentId/watched-status",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const updateStatusWatchlist = await WatchListModel.findOneAndUpdate(
-        { watchListCreator: loggedInUser },
+      const updateStatusWatched = await WatchListModel.findOneAndUpdate(
+        { ...req.params, watchListCreator: loggedInUser._id },
         // Toggle, trocar o status atual por outro. Modelo tem ENUM.
-        { $set: { ...req.params, loggedInUser } },
-        { new: true }
+          { $set:{ contentStatus = "Watched"} }
       );
 
-      if (addContentWatchList) {
-        return res.status(200).json(addContentWatchList);
+      if (updateStatusWatched) {
+        return res.status(200).json(updateStatusWatched);
       }
       return res
         .status(404)
@@ -82,6 +81,35 @@ router.put(
     }
   }
 );
+
+// Trocar status - To watch
+
+router.put(
+  "/watchlist/:contentType/:contentId/towatch-status",
+  isAuthenticated,
+  attachCurrentUser,
+
+  async (req, res, next) => {
+    try {
+      const updateStatusToWatch = await WatchListModel.findOneAndUpdate(
+        { ...req.params, watchListCreator: loggedInUser._id },
+        // Toggle, trocar o status atual por outro. Modelo tem ENUM.
+          { $set:{ contentStatus = "To watch"} }
+      );
+
+      if (updateStatusToWatch) {
+        return res.status(200).json(updateStatusToWatch);
+      }
+      return res
+        .status(404)
+        .json({ error: "Conteúdo não pode ser atualizado." });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+
 
 // Remover conteúdo da watchlist
 
