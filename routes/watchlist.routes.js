@@ -4,8 +4,38 @@ const router = express.Router();
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
 const WatchListModel = require("../models/WatchList.model");
+const UserModel = require("../models/User.model");
 
-// Ver watchlist (usuário vê apenas a sua)
+// Criar uma watch list
+router.post(
+  "/watchlist/:contentType/:contentId",
+  isAuthenticated,
+  attachCurrentUser,
+
+  async (req, res, next) => {
+    try {
+      const loggedInUser = req.currentUser;
+      const watchlist = await WatchListModel.create({
+        ...req.params,
+        watchListCreator: loggedInUser._id,
+      });
+
+      await UserModel.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        {
+          $push: {
+            userWatchList: watchlist._id,
+          },
+        }
+      );
+      return res.status(200).json(watchlists);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Ver watchlists
 
 router.get(
   "/watchlist",
@@ -15,8 +45,8 @@ router.get(
   async (req, res, next) => {
     try {
       const loggedInUser = req.currentUser;
-      const watchlists = await WatchListModel.findOne({
-        watchListCreator: loggedInUser,
+      const watchlists = await WatchListModel.find({
+        watchListCreator: loggedInUser._id,
       });
       return res.status(200).json(watchlists);
     } catch (err) {
@@ -25,10 +55,10 @@ router.get(
   }
 );
 
-// Adicionar conteudo na watchlist
+// Trocar status
 
 router.put(
-  "/watchlist/:contentType/:contentId",
+  "/watchlist/update-status/:contentType/:contentId",
   isAuthenticated,
   attachCurrentUser,
 
