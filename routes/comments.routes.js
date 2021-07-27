@@ -65,14 +65,17 @@ router.delete(
     try {
       const { commentId } = req.params;
       const loggedInUser = req.currentUser;
-      // Precisa disso?
-      const comment = await CommentModel.findOne({ _id: commentId });
-      const deletionResult = await CommentModel.deleteOne({ _id: commentId });
 
+      const deletionResult = await CommentModel.deleteOne({ _id: commentId });
+      // Testar
       if (deletionResult.n > 0) {
         const updatedUser = await UserModel.findOneAndUpdate(
-          { _id: loggedInUser },
-          { new: true }
+          { _id: loggedInUser._id },
+          {
+            $pull: {
+              userComments: commentId,
+            },
+          }
         );
 
         if (updatedUser) {
