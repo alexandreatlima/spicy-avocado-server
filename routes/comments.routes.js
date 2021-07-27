@@ -7,7 +7,7 @@ const UserModel = require("../models/User.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
 
-//Adicionar comentario (C)
+// Criar comentário (C)
 router.post(
   "/:contentType/:contentId/add-comment",
   isAuthenticated,
@@ -38,7 +38,28 @@ router.post(
   }
 );
 
-//Editar comentario (U)
+// Exibir comentários por conteúdo (R)
+
+router.get(
+  "/:contentType/:contentId/contentComments",
+  isAuthenticated,
+  attachCurrentUser,
+
+  async (req, res, next) => {
+    try {
+      const { contentType, contentId } = req.params;
+      const contentComments = await CommentsModel.find({
+        contentType: contentType,
+        contentId: contentId,
+      });
+      return res.status(200).json(contentComments);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Editar um comentario (U)
 router.put(
   "/:contentType/:contentId/:commentId/edit-comment",
   isAuthenticated,
@@ -63,7 +84,7 @@ router.put(
   }
 );
 
-//Deletar um comentario (D)
+// Deletar um comentario (D)
 router.delete(
   "/:contentType/:contentId/:commentId/delete-comment",
   isAuthenticated,
