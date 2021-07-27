@@ -9,7 +9,7 @@ const attachCurrentUser = require("../middlewares/attachCurrentUser");
 
 //Adicionar comentario (C)
 router.post(
-  "/:contentType/:contentId/comment",
+  "/:contentType/:contentId/add-comment",
   isAuthenticated,
   attachCurrentUser,
   async (req, res, next) => {
@@ -31,7 +31,7 @@ router.post(
 
 //Editar comentario (U)
 router.put(
-  "/:contentType/:contentId/:commentId",
+  "/:contentType/:contentId/:commentId/edit-comment",
   isAuthenticated,
   attachCurrentUser,
 
@@ -57,7 +57,7 @@ router.put(
 
 //Deletar um comentario (D)
 router.delete(
-  "/:contentType/:contentId/:commentId",
+  "/:contentType/:contentId/:commentId/delete-comment",
   isAuthenticated,
   attachCurrentUser,
 
