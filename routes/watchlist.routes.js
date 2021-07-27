@@ -8,7 +8,7 @@ const UserModel = require("../models/User.model");
 
 // Criar uma watch list
 router.post(
-  "/watchlist/:contentType/:contentId",
+  "/:contentType/:contentId/watchlist",
   isAuthenticated,
   attachCurrentUser,
 
@@ -28,7 +28,7 @@ router.post(
           },
         }
       );
-      return res.status(200).json(watchlists);
+      return res.status(200).json(watchlist);
     } catch (err) {
       next(err);
     }
@@ -58,21 +58,27 @@ router.get(
 // Trocar status
 
 router.put(
-  "/watchlist/update-status/:contentType/:contentId",
+  "/:contentType/:contentId/watchlist/change-status/:status",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
-      const updateStatusWatchlist = await WatchListModel.findOneAndUpdate(
-        { watchListCreator: loggedInUser },
+      const { contentType, contentId, status } = req.params;
+      const loggedInUser = req.currentUser;
+
+      const updateStatusWatched = await WatchListModel.findOneAndUpdate(
+        {
+          watchListCreator: loggedInUser._id,
+          contentType: contentType,
+          contentId: contentId,
+        },
         // Toggle, trocar o status atual por outro. Modelo tem ENUM.
-        { $set: { ...req.params, loggedInUser } },
-        { new: true }
+        { $set: { contentStatus: status } }
       );
 
-      if (addContentWatchList) {
-        return res.status(200).json(addContentWatchList);
+      if (updateStatusWatched) {
+        return res.status(200).json(updateStatusWatched);
       }
       return res
         .status(404)
@@ -86,15 +92,18 @@ router.put(
 // Remover conteúdo da watchlist
 
 router.delete(
-  "/watchlist/remove-content/:contentType/:contentId",
+  "/:contentType/:contentId/watchlist/remove-content",
   isAuthenticated,
   attachCurrentUser,
 
   async (req, res, next) => {
     try {
       const loggedInUser = req.currentUser;
+      const { contentType, contentId } = req.params;
       const deletionResult = await WatchListModel.deleteOne({
-        watchListCreator: loggedInUser,
+        watchListCreator: loggedInUser._id,
+        contentType: contentType,
+        contentId: contentId,
       });
 
       if (deletionResult.n > 0) {
@@ -109,30 +118,4 @@ router.delete(
   }
 );
 
-// // Editar status do conteúdo - Acho que não precisa mais.
-
-// router.put(
-//   "/watchlist/:contentType/:contentId",
-//   isAuthenticated,
-//   attachCurrentUser,
-
-//   async (req, res, next) => {
-//     try {
-//       const editStatusWatchList = await WatchListModel.findOneAndUpdate(
-//         { watchListCreator: loggedInUser },
-//         // contents é uma array, preciso acessar um obj dentro dessa array com um objectId especfico e mudar o status dele.
-//         { $set: { ...req.params, loggedInUser } },
-//         { new: true }
-//       );
-
-//       if (addContentWatchList) {
-//         return res.status(200).json(addContentWatchList);
-//       }
-//       return res
-//         .status(404)
-//         .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
-//     } catch (err) {
-//       next(err);
-//     }
-//   }
-// );
+module.exports = router;
