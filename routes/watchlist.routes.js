@@ -64,9 +64,9 @@ router.put(
 
   async (req, res, next) => {
     try {
-      const addContentWatchList = await WatchListModel.findOneAndUpdate(
+      const updateStatusWatchlist = await WatchListModel.findOneAndUpdate(
         { watchListCreator: loggedInUser },
-        // Ta certo isso aqui?
+        // Toggle, trocar o status atual por outro. Modelo tem ENUM.
         { $set: { ...req.params, loggedInUser } },
         { new: true }
       );
@@ -76,7 +76,7 @@ router.put(
       }
       return res
         .status(404)
-        .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
+        .json({ error: "Conteúdo não pode ser atualizado." });
     } catch (err) {
       next(err);
     }
@@ -86,7 +86,7 @@ router.put(
 // Remover conteúdo da watchlist
 
 router.delete(
-  "/watchlist/:contentType/:contentId",
+  "/watchlist/remove-content/:contentType/:contentId",
   isAuthenticated,
   attachCurrentUser,
 
@@ -109,30 +109,30 @@ router.delete(
   }
 );
 
-// Editar status do conteúdo
+// // Editar status do conteúdo - Acho que não precisa mais.
 
-router.put(
-  "/watchlist/:contentType/:contentId",
-  isAuthenticated,
-  attachCurrentUser,
+// router.put(
+//   "/watchlist/:contentType/:contentId",
+//   isAuthenticated,
+//   attachCurrentUser,
 
-  async (req, res, next) => {
-    try {
-      const editStatusWatchList = await WatchListModel.findOneAndUpdate(
-        { watchListCreator: loggedInUser },
-        // contents é uma array, preciso acessar um obj dentro dessa array com um objectId especfico e mudar o status dele.
-        { $set: { ...req.params, loggedInUser } },
-        { new: true }
-      );
+//   async (req, res, next) => {
+//     try {
+//       const editStatusWatchList = await WatchListModel.findOneAndUpdate(
+//         { watchListCreator: loggedInUser },
+//         // contents é uma array, preciso acessar um obj dentro dessa array com um objectId especfico e mudar o status dele.
+//         { $set: { ...req.params, loggedInUser } },
+//         { new: true }
+//       );
 
-      if (addContentWatchList) {
-        return res.status(200).json(addContentWatchList);
-      }
-      return res
-        .status(404)
-        .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
+//       if (addContentWatchList) {
+//         return res.status(200).json(addContentWatchList);
+//       }
+//       return res
+//         .status(404)
+//         .json({ error: "Conteúdo não pode ser adicionado por conta de erro." });
+//     } catch (err) {
+//       next(err);
+//     }
+//   }
+// );
