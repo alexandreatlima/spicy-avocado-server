@@ -18,6 +18,9 @@ app.use("/api", commentsRouter);
 const watchlistRouter = require("./routes/watchlist.routes");
 app.use("/api", watchlistRouter);
 
+const contentRouter = require("./routes/content.routes");
+app.use("/api", contentRouter);
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );
