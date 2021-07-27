@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const CommentModel = require("../models/Comments.model");
+const CommentsModel = require("../models/Comments.model");
 const UserModel = require("../models/User.model");
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
@@ -14,14 +14,23 @@ router.post(
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { type, contentId } = req.params;
       const loggedInUser = req.currentUser;
 
-      const newComment = await CommentModel.create({
+      const newComment = await CommentsModel.create({
         ...req.body,
         ...req.params,
         commentCreator: loggedInUser._id,
       });
+
+      await UserModel.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        {
+          $push: {
+            userComments: newComment._id,
+          },
+        }
+      );
+
       return res.status(201).json(newComment);
     } catch (err) {
       next(err);
@@ -39,10 +48,9 @@ router.put(
     try {
       const { commentId } = req.params;
 
-      const updatedComment = await CommentModel.findOneAndUpdate(
+      const updatedComment = await CommentsModel.findOneAndUpdate(
         { _id: commentId },
-        { $set: { ...req.body } },
-        { new: true, runValidators: true }
+        { $set: { ...req.body } }
       );
 
       if (updatedComment) {
@@ -66,7 +74,7 @@ router.delete(
       const { commentId } = req.params;
       const loggedInUser = req.currentUser;
 
-      const deletionResult = await CommentModel.deleteOne({ _id: commentId });
+      const deletionResult = await CommentsModel.deleteOne({ _id: commentId });
       // Testar
       if (deletionResult.n > 0) {
         const updatedUser = await UserModel.findOneAndUpdate(

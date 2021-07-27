@@ -6,9 +6,8 @@ const WatchListSchema = new Schema({
   contentId: { type: Number, require: true },
   contentStatus: {
     type: String,
-    require: true,
-    enum: ["Watched", "To watch"],
-    default: "To watch",
+    enum: ["watched", "to-watch"],
+    default: "to-watch",
   },
   watchListCreator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
