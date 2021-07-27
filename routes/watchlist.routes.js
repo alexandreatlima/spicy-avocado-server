@@ -6,7 +6,7 @@ const attachCurrentUser = require("../middlewares/attachCurrentUser");
 const WatchListModel = require("../models/WatchList.model");
 const UserModel = require("../models/User.model");
 
-// Criar uma watch list
+// Criar uma watch list C
 router.post(
   "/:contentType/:contentId/watchlist",
   isAuthenticated,
@@ -35,7 +35,7 @@ router.post(
   }
 );
 
-// Ver watchlists
+// Ver watchlists R
 
 router.get(
   "/watchlist",
@@ -55,7 +55,7 @@ router.get(
   }
 );
 
-// Trocar status
+// Trocar status U
 
 router.put(
   "/:contentType/:contentId/watchlist/change-status/:status",
@@ -89,7 +89,7 @@ router.put(
   }
 );
 
-// Remover conteúdo da watchlist
+// Remover conteúdo da watchlist D
 
 router.delete(
   "/:contentType/:contentId/watchlist/remove-content",
