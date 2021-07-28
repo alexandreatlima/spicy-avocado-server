@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const WatchListSchema = new Schema({
-  contentType: { type: String, required: true, enum: ["movie", "serie"] },
+  contentType: { type: String, required: true, enum: ["movie", "tv"] },
   contentId: { type: Number, require: true },
   contentStatus: {
     type: String,
