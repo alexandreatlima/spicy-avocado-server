@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const ContentSchema = new Schema({
-  contentType: { type: String, required: true, enum: ["movie", "serie"] },
+  contentType: { type: String, required: true, enum: ["movie", "tv"] },
   contentId: { type: Number, required: true },
   original_title: { type: String, required: true },
   popularity: { type: Number, required: true },
