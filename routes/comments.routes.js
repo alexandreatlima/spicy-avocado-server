@@ -51,7 +51,7 @@ router.get(
       const contentComments = await CommentsModel.find({
         contentType: contentType,
         contentId: contentId,
-      });
+      }).populate("commentCreator");
       return res.status(200).json(contentComments);
     } catch (error) {
       next(error);
