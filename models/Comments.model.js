@@ -9,7 +9,7 @@ const CommentsSchema = new Schema({
     ref: "User",
     required: true,
   },
-  contentType: { type: String, required: true, enum: ["movie", "serie"] },
+  contentType: { type: String, required: true, enum: ["movie", "tv"] },
   contentId: { type: String, required: true },
 });
 
