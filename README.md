@@ -1,5 +1,7 @@
 # Spicy Avocado
 
+[Server](https://github.com/alexandreatlima/spicy-avocado-server) / [Client](https://github.com/Briofita09/spicy-avocado-client) \
+
 ## About the app:
 
 This project was inspired by the famous Rotten Tomatoes website. The idea is to create a place where pop culture fans can find information about the movies and series they want to see and be able to participate in discussions about.
