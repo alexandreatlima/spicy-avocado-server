@@ -20,6 +20,7 @@ router.post(
         ...req.body,
         ...req.params,
         commentCreator: loggedInUser._id,
+        commentId: Date.now().toString(),
       });
 
       await UserModel.findOneAndUpdate(
@@ -55,6 +56,28 @@ router.get(
       return res.status(200).json(contentComments);
     } catch (error) {
       next(error);
+    }
+  }
+);
+
+//Exibir um comentario (R)
+
+router.get(
+  "/:commentId/show-comment",
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { commentId } = req.params;
+
+      const showComment = await CommentsModel.findOne({ _id: commentId });
+
+      if (showComment) {
+        return res.status(200).json(showComment);
+      }
+      return res.status(400).json({ error: "Comentario não encontrado" });
+    } catch (err) {
+      next(err);
     }
   }
 );
@@ -131,7 +154,7 @@ router.put(
 
 // Deletar um comentario (D)
 router.delete(
-  "/:contentType/:contentId/:commentId/delete-comment",
+  "/delete-comment/:commentId",
   isAuthenticated,
   attachCurrentUser,
 

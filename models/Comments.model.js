@@ -11,6 +11,7 @@ const CommentsSchema = new Schema({
   },
   contentType: { type: String, required: true, enum: ["movie", "tv"] },
   contentId: { type: String, required: true },
+  commentId: String,
 });
 
 const CommentsModel = model("Comments", CommentsSchema);
