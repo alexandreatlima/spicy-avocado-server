@@ -1,6 +1,6 @@
 # Spicy Avocado
 
-[Server](https://github.com/alexandreatlima/spicy-avocado-server) / [Client](https://github.com/Briofita09/spicy-avocado-client) \
+[Server](https://github.com/alexandreatlima/spicy-avocado-server) / [Client](https://github.com/Briofita09/spicy-avocado-client) 
 
 ## About the app:
 
