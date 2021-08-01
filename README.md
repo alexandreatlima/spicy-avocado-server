@@ -14,10 +14,3 @@ We are web developers trained by Ironhack and this is the server for our graduat
 [Felipe Osório](https://www.linkedin.com/in/felipe-osorio/)\
 [Gabriel Furquim](https://www.linkedin.com/in/gabriel-furquim52/)
 
-## Try now!
-
-You can try our app on [this link].
-
-## Find out more about this project
-
-More about this project (in Portuguese) [here].
