@@ -2,6 +2,8 @@
 
 The best place to know about movies and tv shows!
 
+[Client](https://github.com/Briofita09/spicy-avocado-client)
+
 <img src="./githublogo.svg" alt="Spicy Avocado's Logo" />
 
 ## 🆘 Backlog:
