@@ -10,6 +10,8 @@ The best place to know about movies and tv shows!
 
 - Improve visual success or failure feedback to the user using a React Hot Tost
 - Integration with Cloudnary
+- Create an environment with Docker
+- Add documentation with instructions on how to run the project
 
 ## 💻 About the app:
 
